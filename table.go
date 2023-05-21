@@ -13,7 +13,7 @@ func RenderTable(addresses []OutAddress) []byte {
 	table.SetHeader([]string{"#", "address", "salt"})
 	for idx, address := range addresses {
 		table.Append([]string{
-			strconv.Itoa(idx + 1), address.Address.Hex(), address.Salt,
+			strconv.Itoa(idx + 1), address.Address.Hex(), "0x" + address.Salt,
 		})
 	}
 	table.Render()
