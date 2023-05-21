@@ -5,10 +5,10 @@ type Filter interface {
 }
 
 type LongRepeatedFilter struct {
-	MinLength     int
-	Char          *byte
-	MaxStartIndex *int
-	Reverse       bool
+	Char          *byte `yaml:"char,omitempty"`
+	Reverse       bool  `yaml:"reverse,omitempty"`
+	MinLength     int   `yaml:"min_length"`
+	MaxStartIndex *int  `yaml:"max_start_index,omitempty"`
 }
 
 func (f *LongRepeatedFilter) Filter(address string) bool {

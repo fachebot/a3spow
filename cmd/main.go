@@ -3,29 +3,41 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/fachebot/a3spow"
 )
 
 func main() {
-	filter := &a3spow.LongRepeatedFilter{MinLength: 8}
-	owner := common.HexToAddress("0x999999273b1f52e3243f526dd54c974b46cd4f05")
+	cfg := a3spow.MustReadConfig("config.yaml")
 
 	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	ch := make(chan a3spow.OutAddress, 1024)
+	waitChan := make(chan bool)
+	outAddressChan := make(chan a3spow.OutAddress, 1024)
 	addresses := make([]a3spow.OutAddress, 0)
 	go func() {
-		for address := range ch {
-			fmt.Println(address.Address)
+		for address := range outAddressChan {
 			addresses = append(addresses, address)
-			cancel()
 		}
+		close(waitChan)
 	}()
 
 	startTime := time.Now()
-	a3spow.StartMining(ctx, owner, filter, 100000000, ch)
-	fmt.Println(time.Since(startTime))
+	a3spow.StartMining(ctx, cfg.Owner, &cfg.Filter, cfg.Number, outAddressChan)
+
+	close(outAddressChan)
+	<-waitChan
+
+	fmt.Println()
+	data := a3spow.RenderTable(addresses)
+	fmt.Println(string(data))
+	fmt.Println("Total elapsed time:", time.Since(startTime))
+
+	filename := fmt.Sprintf("address-%d.txt", time.Now().Unix())
+	if err := os.WriteFile(filename, data, 0666); err == nil {
+		fmt.Printf(`The address has been saved to the file "%s"`, filename)
+	}
 }
