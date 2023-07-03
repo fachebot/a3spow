@@ -57,7 +57,11 @@ func main() {
 		os.Exit(1)
 	}
 	waitForQuitSignals(exitHandle)
-	a3spow.StartMining(ctx, cfg.Owner, &cfg.Filter, cfg.Number, outAddressChan)
+	if !cfg.HD {
+		a3spow.StartMining(ctx, cfg.Owner, &cfg.Filter, cfg.Number, outAddressChan)
+	} else {
+		a3spow.StartHdMining(ctx, cfg.Owner, &cfg.Filter, cfg.Number, outAddressChan)
+	}
 
 	if ctx.Err() == nil {
 		exitHandle(syscall.Signal(0x0))

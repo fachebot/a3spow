@@ -1,5 +1,6 @@
+hd: false
 owner: 0x999999273b1f52e3243f526dd54c974b46cd4f05
 filter:
-  min_length: 6
+  min_length: 8
   max_start_index: 2
-number: 2
+number: 1000

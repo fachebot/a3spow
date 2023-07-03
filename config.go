@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	HD     bool               `yaml:"hd"`
 	Owner  common.Address     `yaml:"owner"`
 	Filter LongRepeatedFilter `yaml:"filter"`
 	Number int32              `yaml:"number"`
