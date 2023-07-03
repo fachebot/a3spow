@@ -13,7 +13,7 @@ import (
 )
 
 func GetHdAddress(owner common.Address) (string, common.Address) {
-	mnemonic, err := hdwallet.NewMnemonic(256)
+	mnemonic, err := hdwallet.NewMnemonic(128)
 	if err != nil {
 		panic(err)
 	}
